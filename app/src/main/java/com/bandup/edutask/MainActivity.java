@@ -2,9 +2,11 @@ package com.bandup.edutask;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.Menu;
 import android.widget.Button;
@@ -392,6 +394,15 @@ public class MainActivity extends AppCompatActivity {
             cardContainer.addView(asignacionCard);
         } while (asignacionesCursor.moveToNext());
     }
+
+    //NUEVO
+    // Método llamado cuando se hace clic en "action_settings"
+    public void onActionSettingsClick(MenuItem item) {
+        // Iniciar la nueva actividad aquí
+        Intent intent = new Intent(this, AcercaDeActivity.class);
+        startActivity(intent);
+    }
+    //NUEVO
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
