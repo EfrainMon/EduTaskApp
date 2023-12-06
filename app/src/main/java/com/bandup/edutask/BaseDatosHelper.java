@@ -9,41 +9,47 @@ import android.util.Log;
 
 public class BaseDatosHelper extends SQLiteOpenHelper {
 
-    private static final String TAG = "BaseDatosHelper";
-    private static final String DB_NAME = "EduTaskDB";
-    private static final int DB_VERSION = 1;
+    public static final String TAG = "BaseDatosHelper";
+    public static final String DB_NAME = "EduTaskDB";
+    public static final int DB_VERSION = 1;
 
     // Nombres de las tablas
-    private static final String TABLE_MATERIA = "Materia";
-    private static final String TABLE_ALUMNO = "Alumno";
-    private static final String TABLE_ASIGNACION = "Asignacion";
-    private static final String TABLE_ALUMNO_MATERIA = "Alumno_Materia";
-    private static final String TABLE_ALUMNO_ASIGNACION = "Alumno_Asignacion";
+    public static final String TABLE_MATERIA = "Materia";
+    public static final String TABLE_ALUMNO = "Alumno";
+    public static final String TABLE_ASIGNACION = "Asignacion";
+    public static final String TABLE_ALUMNO_MATERIA = "Alumno_Materia";
+    public static final String TABLE_ALUMNO_ASIGNACION = "Alumno_Asignacion";
+    public static final String TABLE_ASIGNACION_MATERIA = "Asignacion_Materia";
 
     // Columnas de la tabla Alumno_Materia
-    private static final String COL_ALUMNO_MATERIA_ID = "ID";
-    private static final String COL_ALUMNO_MATERIA_NUM_CONTROL = "NumControl";
-    private static final String COL_ALUMNO_MATERIA_CLAVE = "Clave";
+    public static final String COL_ALUMNO_MATERIA_ID = "ID";
+    public static final String COL_ALUMNO_MATERIA_ALUMNO_ID = "Alumno_ID"; // Cambiado a Alumno_ID
+    public static final String COL_ALUMNO_MATERIA_MATERIA_ID = "Materia_ID"; // Cambiado a Materia_ID
 
     // Columnas de la tabla Alumno_Asignacion
-    private static final String COL_ALUMNO_ASIGNACION_ID = "ID";
-    private static final String COL_ALUMNO_ASIGNACION_NUM_CONTROL = "NumControl";
-    private static final String COL_ALUMNO_ASIGNACION_ID_ASIGNACION = "IDAsignacion";
+    public static final String COL_ALUMNO_ASIGNACION_ID = "ID";
+    public static final String COL_ALUMNO_ASIGNACION_ALUMNO_ID = "Alumno_ID"; // Cambiado a Alumno_ID
+    public static final String COL_ALUMNO_ASIGNACION_ASIGNACION_ID = "Asignacion_ID"; // Cambiado a Asignacion_ID
+
+    // Columnas de la tabla Asignacion_Materia
+    public static final String COL_ASIGNACION_MATERIA_ID = "ID";
+    public static final String COL_ASIGNACION_MATERIA_MATERIA_ID = "Materia_ID"; // Cambiado a Materia_ID
+    public static final String COL_ASIGNACION_MATERIA_ASIGNACION_ID = "Asignacion_ID"; // Cambiado a Asignacion_ID
 
     // Columnas de la tabla Alumno
-    private static final String COL_ALUMNO_ID = "ID";
-    private static final String COL_ALUMNO_NUM_CONTROL = "NumControl";
-    private static final String COL_ALUMNO_NOMBRE = "Nombre";
-    private static final String COL_ALUMNO_A_PATERNO = "aPaterno";
-    private static final String COL_ALUMNO_A_MATERNO = "aMaterno";
-    private static final String COL_ALUMNO_OCULTO = "Oculto";
+    public static final String COL_ALUMNO_ID = "ID";
+    public static final String COL_ALUMNO_NUM_CONTROL = "NumControl";
+    public static final String COL_ALUMNO_NOMBRE = "Nombre";
+    public static final String COL_ALUMNO_A_PATERNO = "aPaterno";
+    public static final String COL_ALUMNO_A_MATERNO = "aMaterno";
+    public static final String COL_ALUMNO_OCULTO = "Oculto";
 
     // Columnas de la tabla Asignacion
-    private static final String COL_ASIGNACION_ID = "ID";
-    private static final String COL_ASIGNACION_FECHA = "Fecha";
-    private static final String COL_ASIGNACION_NOMBRE = "Nombre";
-    private static final String COL_ASIGNACION_REALIZADA = "Realizada";
-    private static final String COL_ASIGNACION_OCULTO = "Oculto";
+    public static final String COL_ASIGNACION_ID = "ID";
+    public static final String COL_ASIGNACION_FECHA = "Fecha";
+    public static final String COL_ASIGNACION_NOMBRE = "Nombre";
+    public static final String COL_ASIGNACION_REALIZADA = "Realizada";
+    public static final String COL_ASIGNACION_OCULTO = "Oculto";
 
     // Columnas de la tabla Materia
     public static final String COL_MATERIA_ID = "ID";
@@ -86,24 +92,85 @@ public class BaseDatosHelper extends SQLiteOpenHelper {
                     + "FOREIGN KEY(Materia_ID) REFERENCES " + TABLE_MATERIA + "(" + COL_MATERIA_ID + "))";
             db.execSQL(crearTablaAsignacion);
 
-            // Crear la tabla Alumno_Materia
+    // Crear la tabla Alumno_Materia
             String crearTablaAlumnoMateria = "CREATE TABLE IF NOT EXISTS " + TABLE_ALUMNO_MATERIA + " ("
                     + COL_ALUMNO_MATERIA_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
-                    + "Alumno_ID INTEGER, "
-                    + "Materia_ID INTEGER, "
-                    + "FOREIGN KEY(Alumno_ID) REFERENCES " + TABLE_ALUMNO + "(" + COL_ALUMNO_ID + "), "
-                    + "FOREIGN KEY(Materia_ID) REFERENCES " + TABLE_MATERIA + "(" + COL_MATERIA_ID + "))";
+                    + COL_ALUMNO_MATERIA_ALUMNO_ID + " INTEGER, " // Cambiado a Alumno_ID
+                    + COL_ALUMNO_MATERIA_MATERIA_ID + " INTEGER, " // Cambiado a Materia_ID
+                    + "FOREIGN KEY(" + COL_ALUMNO_MATERIA_ALUMNO_ID + ") REFERENCES " + TABLE_ALUMNO + "(" + COL_ALUMNO_ID + "), "
+                    + "FOREIGN KEY(" + COL_ALUMNO_MATERIA_MATERIA_ID + ") REFERENCES " + TABLE_MATERIA + "(" + COL_MATERIA_ID + "))";
             db.execSQL(crearTablaAlumnoMateria);
 
-            // Crear la tabla Alumno_Asignacion
+    // Crear la tabla Alumno_Asignacion
             String crearTablaAlumnoAsignacion = "CREATE TABLE IF NOT EXISTS " + TABLE_ALUMNO_ASIGNACION + " ("
                     + COL_ALUMNO_ASIGNACION_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
-                    + "Alumno_ID INTEGER, "
-                    + "Asignacion_ID INTEGER, "
-                    + "FOREIGN KEY(Alumno_ID) REFERENCES " + TABLE_ALUMNO + "(" + COL_ALUMNO_ID + "), "
-                    + "FOREIGN KEY(Asignacion_ID) REFERENCES " + TABLE_ASIGNACION + "(" + COL_ASIGNACION_ID + "))";
+                    + COL_ALUMNO_ASIGNACION_ALUMNO_ID + " INTEGER, " // Cambiado a Alumno_ID
+                    + COL_ALUMNO_ASIGNACION_ASIGNACION_ID + " INTEGER, " // Cambiado a Asignacion_ID
+                    + "FOREIGN KEY(" + COL_ALUMNO_ASIGNACION_ALUMNO_ID + ") REFERENCES " + TABLE_ALUMNO + "(" + COL_ALUMNO_ID + "), "
+                    + "FOREIGN KEY(" + COL_ALUMNO_ASIGNACION_ASIGNACION_ID + ") REFERENCES " + TABLE_ASIGNACION + "(" + COL_ASIGNACION_ID + "))";
             db.execSQL(crearTablaAlumnoAsignacion);
-        }
+
+    // Crear la tabla Asignacion_Materia
+            String crearTablaAsignacionMateria = "CREATE TABLE IF NOT EXISTS " + TABLE_ASIGNACION_MATERIA + " ("
+                    + COL_ASIGNACION_MATERIA_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+                    + COL_ASIGNACION_MATERIA_MATERIA_ID + " INTEGER, " // Cambiado a Materia_ID
+                    + COL_ASIGNACION_MATERIA_ASIGNACION_ID + " INTEGER, " // Cambiado a Asignacion_ID
+                    + "FOREIGN KEY(" + COL_ASIGNACION_MATERIA_MATERIA_ID + ") REFERENCES " + TABLE_MATERIA + "(" + COL_MATERIA_ID + "), "
+                    + "FOREIGN KEY(" + COL_ASIGNACION_MATERIA_ASIGNACION_ID + ") REFERENCES " + TABLE_ASIGNACION + "(" + COL_ASIGNACION_ID + "))";
+            db.execSQL(crearTablaAsignacionMateria);
+
+        // Insertar datos en la tabla Alumno
+        String insertarAlumno1 = "INSERT INTO " + TABLE_ALUMNO + " (" + COL_ALUMNO_ID + ", "
+                + COL_ALUMNO_NUM_CONTROL + ", " + COL_ALUMNO_NOMBRE + ", " + COL_ALUMNO_A_PATERNO + ", "
+                + COL_ALUMNO_A_MATERNO + ", " + COL_ALUMNO_OCULTO + ") VALUES (10, '20130810', 'Efrain', 'Montalvo', 'Sanchez', 0)";
+        db.execSQL(insertarAlumno1);
+
+        String insertarAlumno2 = "INSERT INTO " + TABLE_ALUMNO + " (" + COL_ALUMNO_ID + ", "
+                + COL_ALUMNO_NUM_CONTROL + ", " + COL_ALUMNO_NOMBRE + ", " + COL_ALUMNO_A_PATERNO + ", "
+                + COL_ALUMNO_A_MATERNO + ", " + COL_ALUMNO_OCULTO + ") VALUES (11, '20130770', 'Tomas Alejandro', 'Galvan', 'Gandara', 0)";
+        db.execSQL(insertarAlumno2);
+
+        // Insertar datos en la tabla Materia
+        String insertarMateria1 = "INSERT INTO " + TABLE_MATERIA + " (" + COL_MATERIA_ID + ", "
+                + COL_MATERIA_CLAVE + ", " + COL_MATERIA_NOMBRE + ", " + COL_MATERIA_OCULTO + ") VALUES (10, 'A11A', 'Android', 0)";
+        db.execSQL(insertarMateria1);
+
+        String insertarMateria2 = "INSERT INTO " + TABLE_MATERIA + " (" + COL_MATERIA_ID + ", "
+                + COL_MATERIA_CLAVE + ", " + COL_MATERIA_NOMBRE + ", " + COL_MATERIA_OCULTO + ") VALUES (11, 'B11B', 'Automatas', 0)";
+        db.execSQL(insertarMateria2);
+
+        String insertarMateria3 = "INSERT INTO " + TABLE_MATERIA + " (" + COL_MATERIA_ID + ", "
+                + COL_MATERIA_CLAVE + ", " + COL_MATERIA_NOMBRE + ", " + COL_MATERIA_OCULTO + ") VALUES (12, 'C12C', 'Conmutacion', 0)";
+        db.execSQL(insertarMateria3);
+
+        String insertarMateria4 = "INSERT INTO " + TABLE_MATERIA + " (" + COL_MATERIA_ID + ", "
+                + COL_MATERIA_CLAVE + ", " + COL_MATERIA_NOMBRE + ", " + COL_MATERIA_OCULTO + ") VALUES (13, 'D13D', 'Gestion de Proyectos de Software', 1)";
+        db.execSQL(insertarMateria4);
+
+        // Insertar datos en la tabla Asignacion
+        String insertarAsignacion1 = "INSERT INTO " + TABLE_ASIGNACION + " (" + COL_ASIGNACION_ID + ", "
+                + COL_ASIGNACION_FECHA + ", " + COL_ASIGNACION_NOMBRE + ", " + COL_ASIGNACION_REALIZADA + ", "
+                + COL_ASIGNACION_OCULTO + ", Materia_ID) VALUES (10, '2013-12-06', 'Tarea 10', 0, 0, 10)";
+        db.execSQL(insertarAsignacion1);
+
+        // Insertar datos en la tabla Alumno_Materia
+        String insertarAlumnoMateria = "INSERT INTO " + TABLE_ALUMNO_MATERIA + " (" + COL_ALUMNO_MATERIA_ID + ", "
+                + COL_ALUMNO_MATERIA_ALUMNO_ID + ", " + COL_ALUMNO_MATERIA_MATERIA_ID + ") VALUES (1, 10, 10)";
+        db.execSQL(insertarAlumnoMateria);
+
+        // Insertar datos en la tabla Alumno_Asignacion
+        String insertarAlumnoAsignacion = "INSERT INTO " + TABLE_ALUMNO_ASIGNACION + " (" + COL_ALUMNO_ASIGNACION_ID + ", "
+                + COL_ALUMNO_ASIGNACION_ALUMNO_ID + ", " + COL_ALUMNO_ASIGNACION_ASIGNACION_ID + ") VALUES (1, 10, 10)";
+        db.execSQL(insertarAlumnoAsignacion);
+
+        // Insertar datos en la tabla Asignacion_Materia
+        String insertarAsignacionMateria = "INSERT INTO " + TABLE_ASIGNACION_MATERIA + " (" + COL_ASIGNACION_MATERIA_ID + ", "
+                + COL_ASIGNACION_MATERIA_MATERIA_ID + ", " + COL_ASIGNACION_MATERIA_ASIGNACION_ID + ") VALUES (1, 10, 10)";
+        db.execSQL(insertarAsignacionMateria);
+
+
+
+    }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
@@ -117,7 +184,7 @@ public class BaseDatosHelper extends SQLiteOpenHelper {
     // Puedes agregar métodos para insertar, actualizar y consultar datos en cada tabla según tus necesidades
 
     // Ejemplo de método para agregar datos a la tabla Alumno
-// Métodos para operaciones en la tabla Alumno
+    // Métodos para operaciones en la tabla Alumno
     public boolean addAlumno(String numControl, String nombre, String aPaterno, String aMaterno, int oculto) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
@@ -205,12 +272,13 @@ public class BaseDatosHelper extends SQLiteOpenHelper {
         ContentValues values = new ContentValues();
         values.put(COL_MATERIA_OCULTO, 1);
 
-        // Utiliza 'nombre' en lugar de 'id' en la siguiente línea
-        db.update(TABLE_MATERIA, values, COL_MATERIA_NOMBRE + " = ? AND " + COL_MATERIA_CLAVE + " = ?", new String[]{nombre, clave});
+        // Corregir el orden de la condición para que sea clave = ? AND nombre = ?
+        db.update(TABLE_MATERIA, values, COL_MATERIA_CLAVE + " = ? AND " + COL_MATERIA_NOMBRE + " = ?", new String[]{clave, nombre});
 
         // Puedes añadir logs o mensajes aquí para indicar que la materia fue "eliminada"
         Log.d(TAG, "deleteMateria: Materia con nombre " + nombre + " y clave " + clave + " oculta (Oculto = 1)");
     }
+
 
     public Cursor getMaterias() {
         SQLiteDatabase db = this.getReadableDatabase();
