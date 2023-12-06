@@ -89,8 +89,6 @@ public class BaseDatosHelper extends SQLiteOpenHelper {
             // Crear la tabla Alumno_Materia
             String crearTablaAlumnoMateria = "CREATE TABLE IF NOT EXISTS " + TABLE_ALUMNO_MATERIA + " ("
                     + COL_ALUMNO_MATERIA_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
-                    + COL_ALUMNO_MATERIA_NUM_CONTROL + " TEXT, "
-                    + COL_ALUMNO_MATERIA_CLAVE + " TEXT, "
                     + "Alumno_ID INTEGER, "
                     + "Materia_ID INTEGER, "
                     + "FOREIGN KEY(Alumno_ID) REFERENCES " + TABLE_ALUMNO + "(" + COL_ALUMNO_ID + "), "
@@ -100,8 +98,6 @@ public class BaseDatosHelper extends SQLiteOpenHelper {
             // Crear la tabla Alumno_Asignacion
             String crearTablaAlumnoAsignacion = "CREATE TABLE IF NOT EXISTS " + TABLE_ALUMNO_ASIGNACION + " ("
                     + COL_ALUMNO_ASIGNACION_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
-                    + COL_ALUMNO_ASIGNACION_NUM_CONTROL + " TEXT, "
-                    + COL_ALUMNO_ASIGNACION_ID_ASIGNACION + " INTEGER, "
                     + "Alumno_ID INTEGER, "
                     + "Asignacion_ID INTEGER, "
                     + "FOREIGN KEY(Alumno_ID) REFERENCES " + TABLE_ALUMNO + "(" + COL_ALUMNO_ID + "), "
