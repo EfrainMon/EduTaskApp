@@ -46,10 +46,10 @@ public class BaseDatosHelper extends SQLiteOpenHelper {
     private static final String COL_ASIGNACION_OCULTO = "Oculto";
 
     // Columnas de la tabla Materia
-    private static final String COL_MATERIA_ID = "ID";
-    private static final String COL_MATERIA_CLAVE = "Clave";
-    private static final String COL_MATERIA_NOMBRE = "Nombre";
-    private static final String COL_MATERIA_OCULTO = "Oculto";
+    public static final String COL_MATERIA_ID = "ID";
+    public static final String COL_MATERIA_CLAVE = "Clave";
+    public static final String COL_MATERIA_NOMBRE = "Nombre";
+    public static final String COL_MATERIA_OCULTO = "Oculto";
 
     public BaseDatosHelper(Context context) {
         super(context, DB_NAME, null, DB_VERSION);
@@ -218,11 +218,17 @@ public class BaseDatosHelper extends SQLiteOpenHelper {
 
     public Cursor getMaterias() {
         SQLiteDatabase db = this.getReadableDatabase();
-        String query = "SELECT * FROM " + TABLE_MATERIA + " WHERE " + COL_MATERIA_OCULTO + " = 0";
+        String query = "SELECT " + COL_MATERIA_ID + " AS _id, " + COL_MATERIA_NOMBRE + " FROM " + TABLE_MATERIA + " WHERE " + COL_MATERIA_OCULTO + " = 0";
+
         return db.rawQuery(query, null);
     }
 
     // Dentro de la clase BaseDatosHelper
+
+    // Método para obtener el nombre de la columna Materia_Nombre
+    public static String getMateriaNombreColumn() {
+        return COL_MATERIA_NOMBRE;
+    }
 
     public Cursor getAsignacionesParaDia(String fecha) {
         SQLiteDatabase db = this.getReadableDatabase();

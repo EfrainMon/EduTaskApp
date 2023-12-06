@@ -8,6 +8,7 @@
         android:id="@+id/edtNombreAsignacionEditar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_margin="15dp"
         android:ems="10"
         android:hint="@string/menu_asignacion"
         android:inputType="text" />
@@ -16,10 +17,8 @@
         android:id="@+id/txtFechaEntregaAsigEditar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_margin="15dp"
         android:hint="Fecha de entrega"
-        android:textSize="24sp" />
-    <CalendarView
-        android:id="@+id/calendarViewAsignacion"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:textSize="18sp" />
+
 </LinearLayout>
