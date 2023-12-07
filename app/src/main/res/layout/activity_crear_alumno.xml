@@ -39,17 +39,11 @@
             android:text="Materias del alumno:"
             android:textSize="20sp" />
 
-        <CheckBox
-            android:id="@+id/checkBox"
+        <ListView
+            android:id="@+id/listViewMateriasDeAlumno"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="CheckBox" />
+            android:layout_height="match_parent" />
 
-        <CheckBox
-            android:id="@+id/checkBox2"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="CheckBox" />
     </LinearLayout>
 
 </LinearLayout>

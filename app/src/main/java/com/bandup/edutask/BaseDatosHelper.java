@@ -30,6 +30,7 @@ public class BaseDatosHelper extends SQLiteOpenHelper {
     public static final String COL_ALUMNO_ASIGNACION_ID = "ID";
     public static final String COL_ALUMNO_ASIGNACION_ALUMNO_ID = "Alumno_ID"; // Cambiado a Alumno_ID
     public static final String COL_ALUMNO_ASIGNACION_ASIGNACION_ID = "Asignacion_ID"; // Cambiado a Asignacion_ID
+    public static final String COL_ALUMNO_ASIGNACION_REALIZADA = "Realizada";
 
     // Columnas de la tabla Asignacion_Materia
     public static final String COL_ASIGNACION_MATERIA_ID = "ID";
@@ -47,7 +48,6 @@ public class BaseDatosHelper extends SQLiteOpenHelper {
     public static final String COL_ASIGNACION_ID = "ID";
     public static final String COL_ASIGNACION_FECHA = "Fecha";
     public static final String COL_ASIGNACION_NOMBRE = "Nombre";
-    public static final String COL_ASIGNACION_REALIZADA = "Realizada";
     public static final String COL_ASIGNACION_OCULTO = "Oculto";
 
     // Columnas de la tabla Materia
@@ -79,16 +79,15 @@ public class BaseDatosHelper extends SQLiteOpenHelper {
                     + COL_MATERIA_OCULTO + " INTEGER)";
             db.execSQL(crearTablaMateria);
 
-            // Crear la tabla Asignacion
-            String crearTablaAsignacion = "CREATE TABLE IF NOT EXISTS " + TABLE_ASIGNACION + " ("
-                    + COL_ASIGNACION_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
-                    + COL_ASIGNACION_FECHA + " TEXT, "
-                    + COL_ASIGNACION_NOMBRE + " TEXT, "
-                    + COL_ASIGNACION_REALIZADA + " INTEGER, "
-                    + COL_ASIGNACION_OCULTO + " INTEGER, "
-                    + "Materia_ID INTEGER, "
-                    + "FOREIGN KEY(Materia_ID) REFERENCES " + TABLE_MATERIA + "(" + COL_MATERIA_ID + "))";
-            db.execSQL(crearTablaAsignacion);
+        // Crear la tabla Asignacion
+        String crearTablaAsignacion = "CREATE TABLE IF NOT EXISTS " + TABLE_ASIGNACION + " ("
+                + COL_ASIGNACION_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+                + COL_ASIGNACION_FECHA + " TEXT, "
+                + COL_ASIGNACION_NOMBRE + " TEXT, "
+                + COL_ASIGNACION_OCULTO + " INTEGER, "
+                + "Materia_ID INTEGER, "
+                + "FOREIGN KEY(Materia_ID) REFERENCES " + TABLE_MATERIA + "(" + COL_MATERIA_ID + "))";
+        db.execSQL(crearTablaAsignacion);
 
     // Crear la tabla Alumno_Materia
             String crearTablaAlumnoMateria = "CREATE TABLE IF NOT EXISTS " + TABLE_ALUMNO_MATERIA + " ("
@@ -99,14 +98,15 @@ public class BaseDatosHelper extends SQLiteOpenHelper {
                     + "FOREIGN KEY(" + COL_ALUMNO_MATERIA_MATERIA_ID + ") REFERENCES " + TABLE_MATERIA + "(" + COL_MATERIA_ID + "))";
             db.execSQL(crearTablaAlumnoMateria);
 
-    // Crear la tabla Alumno_Asignacion
-            String crearTablaAlumnoAsignacion = "CREATE TABLE IF NOT EXISTS " + TABLE_ALUMNO_ASIGNACION + " ("
-                    + COL_ALUMNO_ASIGNACION_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
-                    + COL_ALUMNO_ASIGNACION_ALUMNO_ID + " INTEGER, " // Cambiado a Alumno_ID
-                    + COL_ALUMNO_ASIGNACION_ASIGNACION_ID + " INTEGER, " // Cambiado a Asignacion_ID
-                    + "FOREIGN KEY(" + COL_ALUMNO_ASIGNACION_ALUMNO_ID + ") REFERENCES " + TABLE_ALUMNO + "(" + COL_ALUMNO_ID + "), "
-                    + "FOREIGN KEY(" + COL_ALUMNO_ASIGNACION_ASIGNACION_ID + ") REFERENCES " + TABLE_ASIGNACION + "(" + COL_ASIGNACION_ID + "))";
-            db.execSQL(crearTablaAlumnoAsignacion);
+        // Crear la tabla Alumno_Asignacion
+        String crearTablaAlumnoAsignacion = "CREATE TABLE IF NOT EXISTS " + TABLE_ALUMNO_ASIGNACION + " ("
+                + COL_ALUMNO_ASIGNACION_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+                + COL_ALUMNO_ASIGNACION_ALUMNO_ID + " INTEGER, " // Cambiado a Alumno_ID
+                + COL_ALUMNO_ASIGNACION_ASIGNACION_ID + " INTEGER, " // Cambiado a Asignacion_ID
+                + COL_ALUMNO_ASIGNACION_REALIZADA + " INTEGER, " // Asignacion Realizada
+                + "FOREIGN KEY(" + COL_ALUMNO_ASIGNACION_ALUMNO_ID + ") REFERENCES " + TABLE_ALUMNO + "(" + COL_ALUMNO_ID + "), "
+                + "FOREIGN KEY(" + COL_ALUMNO_ASIGNACION_ASIGNACION_ID + ") REFERENCES " + TABLE_ASIGNACION + "(" + COL_ASIGNACION_ID + "))";
+        db.execSQL(crearTablaAlumnoAsignacion);
 
     // Crear la tabla Asignacion_Materia
             String crearTablaAsignacionMateria = "CREATE TABLE IF NOT EXISTS " + TABLE_ASIGNACION_MATERIA + " ("
@@ -147,8 +147,8 @@ public class BaseDatosHelper extends SQLiteOpenHelper {
 
         // Insertar datos en la tabla Asignacion
         String insertarAsignacion1 = "INSERT INTO " + TABLE_ASIGNACION + " (" + COL_ASIGNACION_ID + ", "
-                + COL_ASIGNACION_FECHA + ", " + COL_ASIGNACION_NOMBRE + ", " + COL_ASIGNACION_REALIZADA + ", "
-                + COL_ASIGNACION_OCULTO + ", Materia_ID) VALUES (10, '2013-12-06', 'Tarea 10', 0, 0, 10)";
+                + COL_ASIGNACION_FECHA + ", " + COL_ASIGNACION_NOMBRE + ", "
+                + COL_ASIGNACION_OCULTO + ", Materia_ID) VALUES (10, '2013-12-06', 'Tarea 10', 0, 10)";
         db.execSQL(insertarAsignacion1);
 
         // Insertar datos en la tabla Alumno_Materia
@@ -158,7 +158,8 @@ public class BaseDatosHelper extends SQLiteOpenHelper {
 
         // Insertar datos en la tabla Alumno_Asignacion
         String insertarAlumnoAsignacion = "INSERT INTO " + TABLE_ALUMNO_ASIGNACION + " (" + COL_ALUMNO_ASIGNACION_ID + ", "
-                + COL_ALUMNO_ASIGNACION_ALUMNO_ID + ", " + COL_ALUMNO_ASIGNACION_ASIGNACION_ID + ") VALUES (1, 10, 10)";
+                + COL_ALUMNO_ASIGNACION_ALUMNO_ID + ", " + COL_ALUMNO_ASIGNACION_ASIGNACION_ID + ", " + COL_ALUMNO_ASIGNACION_REALIZADA + ")" +
+                " VALUES (1, 10, 10, 0)";
         db.execSQL(insertarAlumnoAsignacion);
 
         // Insertar datos en la tabla Asignacion_Materia
@@ -216,12 +217,11 @@ public class BaseDatosHelper extends SQLiteOpenHelper {
     }
 
     // Métodos para operaciones en la tabla Asignacion
-    public boolean addAsignacion(String fecha, String nombre, int realizada, int oculto, int materiaID) {
+    public boolean addAsignacion(String fecha, String nombre, int oculto, int materiaID) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put(COL_ASIGNACION_FECHA, fecha);
         contentValues.put(COL_ASIGNACION_NOMBRE, nombre);
-        contentValues.put(COL_ASIGNACION_REALIZADA, realizada);
         contentValues.put(COL_ASIGNACION_OCULTO, oculto);
         contentValues.put("Materia_ID", materiaID);
 
@@ -307,4 +307,84 @@ public class BaseDatosHelper extends SQLiteOpenHelper {
                 COL_ASIGNACION_OCULTO + " = 0";
         return db.rawQuery(query, new String[]{String.valueOf(materiaId)});
     }
+
+    //ERNESTO CHECKBOX
+    public boolean addAlumno_Materia(String alumnoID, String materiaID){
+        //Aqui esta la insercion de codigo en caso de ser nuevo
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(COL_ALUMNO_MATERIA_ALUMNO_ID, alumnoID);
+        contentValues.put(COL_ALUMNO_MATERIA_MATERIA_ID, materiaID);
+        //contentValues.put("Materia_ID", materiaID);
+        //Toast.makeText(MainActivity.getContext(), "Se ha ejecutadop el texto", Toast.LENGTH_SHORT);
+
+        long resultado = db.insert(TABLE_ALUMNO_MATERIA, null, contentValues);
+        return resultado !=-1;
+
+
+    }
+
+    //    public Cursor getAlumno_Materia(int alumnoID, int materiaID){
+//        String query = "SELECT "+
+//    }
+    public boolean deleteAlumno_Materia(String alumnoID, String materiaID){
+
+        //Primero se comprueba si existe la tupla
+
+        //Aqui esta la insercion de codigo en caso de ser nuevo
+        SQLiteDatabase db = this.getWritableDatabase();
+        String whereClause = COL_ALUMNO_MATERIA_ALUMNO_ID + " = " +
+                alumnoID+ " AND " + COL_ALUMNO_MATERIA_MATERIA_ID
+                + " = " + materiaID;
+        String[] whereArgs = new String[]{String.valueOf(alumnoID), String.valueOf(materiaID)};
+
+        long resultado = db.delete(TABLE_ALUMNO_MATERIA, whereClause, whereArgs);
+        return resultado != -1;
+
+
+
+    }
+    public boolean existeAlumno_Materia(String alumnoID, String materiaID){
+        SQLiteDatabase db = this.getReadableDatabase();
+        String query = "SELECT " + COL_ALUMNO_MATERIA_ID + " FROM "+
+                TABLE_ALUMNO_MATERIA + " WHERE " + "'" +alumnoID +"'"+ " = " +
+                COL_ALUMNO_MATERIA_ALUMNO_ID + " AND " + materiaID + " = " +
+                COL_ALUMNO_MATERIA_MATERIA_ID;
+
+        Cursor cursor =db.rawQuery(query, null);
+        if(cursor.moveToFirst()){
+            cursor.close();
+            return true;
+        }
+        else{
+            cursor.close();
+            return false;
+        }
+    }
+    public String getAlumnoClave(String nombre, String numControl ){ //YA FUNCIONA!
+        SQLiteDatabase db = this.getReadableDatabase();
+        String query = "SELECT " + COL_ALUMNO_ID + " FROM " + TABLE_ALUMNO +
+                " WHERE " + COL_ALUMNO_NOMBRE_COMPLETO + " LIKE " + "'" + nombre + "'" +
+                " AND " + COL_ALUMNO_NUM_CONTROL + " LIKE " + "'" +numControl + "'" +
+                " AND " + COL_ALUMNO_OCULTO + " = " + 0;
+        Cursor cursor = db.rawQuery(query, null);
+        String idFinal="";
+        if(cursor.moveToFirst()){
+            idFinal = cursor.getString(0);
+        }
+        return idFinal;
+    }
+    public String getColMateriaId(String nombreMateria){
+        SQLiteDatabase db = this.getReadableDatabase();
+        String query = " SELECT " + COL_MATERIA_ID + " FROM " + TABLE_MATERIA +
+                " WHERE " + COL_MATERIA_NOMBRE + " LIKE " + "'"+nombreMateria +"'"+
+                " AND "  + COL_ALUMNO_OCULTO + " = " + 0;
+        Cursor cursor = db.rawQuery(query, null);
+        String idFinal="";
+        if(cursor.moveToFirst()){
+            idFinal = cursor.getString(0);
+        }
+        return idFinal;
+    }
+    //ERNESTO CHECKBOX
 }
