@@ -5,6 +5,15 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
+    <FrameLayout
+        android:id="@+id/contenedor1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <!-- Aquí puedes agregar cualquier otra vista que desees tener en este contenedor -->
+
+    </FrameLayout>
+
     <ListView
         android:id="@+id/listViewMaterias"
         android:layout_width="match_parent"

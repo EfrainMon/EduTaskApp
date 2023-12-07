@@ -2,6 +2,7 @@ package com.bandup.edutask;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,15 +15,13 @@ import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
 
+import com.bandup.edutask.BaseDatosHelper;
+import com.bandup.edutask.R;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link AsignacionesFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class AsignacionesFragment extends Fragment {
 
     private ListView listViewAssignments;
+    private BaseDatosHelper baseDatosHelper;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -62,63 +61,79 @@ public class AsignacionesFragment extends Fragment {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_asignaciones, container, false);
 
+        // Inicializa el BaseDatosHelper
+        baseDatosHelper = new BaseDatosHelper(requireContext());
+
         // Obtén la referencia del ListView desde el diseño del fragmento
         listViewAssignments = rootView.findViewById(R.id.listViewAssignments);
 
-        // Datos de ejemplo para la lista
-        String[] items = {"Item 1", "Item 2", "Item 3"};
-        String[] subItems = {"Subitem 1", "Subitem 2", "Subitem 3"};
+        // Recupera el ID de la materia de los argumentos
+        int materiaId = getArguments().getInt("materiaId", -1);
 
-        // Crea un adaptador personalizado para el ListView
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(requireContext(), R.layout.custom_list_item, R.id.text1, items) {
-            @Override
-            public View getView(int position, View convertView, ViewGroup parent) {
-                View view = super.getView(position, convertView, parent);
+        // Ahora puedes usar el ID de la materia para obtener las asignaciones correspondientes
+        if (materiaId != -1) {
+            Cursor cursorAsignaciones = baseDatosHelper.getAsignacionesPorMateria(materiaId);
 
-                // Configura el texto del subitem
-                TextView text2 = view.findViewById(R.id.text2);
-                text2.setText(subItems[position]);
+            // Configura el adaptador y realiza otras configuraciones según sea necesario
+            String[] items = new String[cursorAsignaciones.getCount()];
+            String[] subItems = new String[cursorAsignaciones.getCount()];
 
-
-
-
-                // Configura el icono de lápiz
-
-                ImageView imageViewEdit = view.findViewById(R.id.imageViewEdit);
-                imageViewEdit.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        // Lógica cuando se hace clic en el icono de lápiz
-                        v = getLayoutInflater().inflate(R.layout.activity_editar_asignacion, null);
-                        AlertDialog.Builder builder = new AlertDialog.Builder ( v.getContext() );
-                        builder.setTitle ( "Editar" )
-                                .setView ( v )
-                                .setPositiveButton("Editar", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialogInterface, int i) {
-                                        //Aqui debe ir el codigo para la edicion
-
-                                            dialogInterface.dismiss();
-                                        //Toast.makeText(v.getContext(), "Se ha Editado con Exito", Toast.LENGTH_SHORT).show();
-                                    }
-                                })
-                                .setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialogInterface, int i) {
-                                        dialogInterface.dismiss();
-                                    }
-                                })
-                                .create()
-                                .show();
-                    }
-                });
-
-                return view;
+            // Llena los arreglos con datos del cursor
+            if (cursorAsignaciones.moveToFirst()) {
+                int i = 0;
+                do {
+                    items[i] = cursorAsignaciones.getString(cursorAsignaciones.getColumnIndexOrThrow(BaseDatosHelper.COL_ASIGNACION_NOMBRE));
+                    subItems[i] = cursorAsignaciones.getString(cursorAsignaciones.getColumnIndexOrThrow(BaseDatosHelper.COL_ASIGNACION_FECHA));
+                    i++;
+                } while (cursorAsignaciones.moveToNext());
             }
-        };
 
-        // Configura el adaptador en el ListView
-        listViewAssignments.setAdapter(adapter);
+            // Crea un adaptador personalizado para el ListView
+            ArrayAdapter<String> adapter = new ArrayAdapter<String>(requireContext(), R.layout.custom_list_item, R.id.text1, items) {
+                @Override
+                public View getView(int position, View convertView, ViewGroup parent) {
+                    View view = super.getView(position, convertView, parent);
+
+                    // Configura el texto del subitem
+                    TextView text2 = view.findViewById(R.id.text2);
+                    text2.setText(subItems[position]);
+
+                    // Configura el icono de lápiz
+                    ImageView imageViewEdit = view.findViewById(R.id.imageViewEdit);
+                    imageViewEdit.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            // Lógica cuando se hace clic en el icono de lápiz
+                            v = getLayoutInflater().inflate(R.layout.activity_editar_asignacion, null);
+                            AlertDialog.Builder builder = new AlertDialog.Builder(v.getContext());
+                            builder.setTitle("Editar")
+                                    .setView(v)
+                                    .setPositiveButton("Editar", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialogInterface, int i) {
+                                            // Aquí debe ir el código para la edición
+                                            dialogInterface.dismiss();
+                                            // Toast.makeText(v.getContext(), "Se ha Editado con Éxito", Toast.LENGTH_SHORT).show();
+                                        }
+                                    })
+                                    .setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialogInterface, int i) {
+                                            dialogInterface.dismiss();
+                                        }
+                                    })
+                                    .create()
+                                    .show();
+                        }
+                    });
+
+                    return view;
+                }
+            };
+
+            // Configura el adaptador en el ListView
+            listViewAssignments.setAdapter(adapter);
+        }
 
         listViewAssignments.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override

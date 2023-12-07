@@ -299,4 +299,12 @@ public class BaseDatosHelper extends SQLiteOpenHelper {
                 COL_ASIGNACION_FECHA + " <= ?";
         return db.rawQuery(query, new String[]{fecha, fecha});
     }
+
+    public Cursor getAsignacionesPorMateria(int materiaId) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String query = "SELECT * FROM " + TABLE_ASIGNACION +
+                " WHERE " + COL_ASIGNACION_MATERIA_MATERIA_ID + " = ? AND " +
+                COL_ASIGNACION_OCULTO + " = 0";
+        return db.rawQuery(query, new String[]{String.valueOf(materiaId)});
+    }
 }
