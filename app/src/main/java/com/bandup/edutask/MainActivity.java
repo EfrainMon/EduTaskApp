@@ -16,7 +16,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.navigation.NavigationView;
 
 import androidx.cardview.widget.CardView;
@@ -43,10 +42,6 @@ public class MainActivity extends AppCompatActivity {
     private CalendarView calendarView;
 
     BaseDatosHelper miBaseDatosHelper;
-
-    private Button btnCrearMateria;
-    private Button btnEliminarMateria;
-    private EditText edtNombreMateria, edtClaveMateria;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -207,20 +202,16 @@ public class MainActivity extends AppCompatActivity {
                                         // Lógica para manejar la acción de agregar alumno
                                         // Puedes obtener referencias a los elementos de tu formulario aquí
                                         EditText numControl = crearAlumnoView.findViewById(R.id.edtNumControlAlu);
-                                        EditText nombreAlu = crearAlumnoView.findViewById(R.id.edtNombreAlu);
-                                        EditText apPaternoAlu = crearAlumnoView.findViewById(R.id.edtApPatAlu);
-                                        EditText apMaternoAlu = crearAlumnoView.findViewById(R.id.edtApMatAlu);
+                                        EditText nombreCompletoAlu = crearAlumnoView.findViewById(R.id.edtNombreCompletoAlu);
 
                                         // Dentro del método onClick del botón "Agregar" en el diálogo de agregar alumno
                                         String textoNumControl = numControl.getText().toString();
-                                        String textoNombreAlu = nombreAlu.getText().toString();
-                                        String textoApPaternoAlu = apPaternoAlu.getText().toString();
-                                        String textoApMaternoAlu = apMaternoAlu.getText().toString();
+                                        String textoNombreAlu = nombreCompletoAlu.getText().toString();
 
                                         // Verifica si los campos no están vacíos
-                                        if (!textoNumControl.isEmpty() && !textoNombreAlu.isEmpty() && !textoApPaternoAlu.isEmpty() && !textoApMaternoAlu.isEmpty()) {
+                                        if (!textoNumControl.isEmpty() && !textoNombreAlu.isEmpty() ) {
                                             // Agrega el alumno a la base de datos
-                                            boolean exito = miBaseDatosHelper.addAlumno(textoNumControl, textoNombreAlu, textoApPaternoAlu, textoApMaternoAlu, 0);
+                                            boolean exito = miBaseDatosHelper.addAlumno(textoNumControl, textoNombreAlu, 0);
 
                                             // Verifica si se agregó correctamente
                                             if (exito) {

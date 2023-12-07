@@ -39,10 +39,9 @@ public class BaseDatosHelper extends SQLiteOpenHelper {
     // Columnas de la tabla Alumno
     public static final String COL_ALUMNO_ID = "ID";
     public static final String COL_ALUMNO_NUM_CONTROL = "NumControl";
-    public static final String COL_ALUMNO_NOMBRE = "Nombre";
-    public static final String COL_ALUMNO_A_PATERNO = "aPaterno";
-    public static final String COL_ALUMNO_A_MATERNO = "aMaterno";
+    public static final String COL_ALUMNO_NOMBRE_COMPLETO = "NombreCompleto";
     public static final String COL_ALUMNO_OCULTO = "Oculto";
+
 
     // Columnas de la tabla Asignacion
     public static final String COL_ASIGNACION_ID = "ID";
@@ -63,17 +62,16 @@ public class BaseDatosHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-            // Crear la tabla Alumno
+        // Crear la tabla Alumno
             String crearTablaAlumno = "CREATE TABLE IF NOT EXISTS " + TABLE_ALUMNO + " ("
                     + COL_ALUMNO_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
                     + COL_ALUMNO_NUM_CONTROL + " TEXT UNIQUE, "
-                    + COL_ALUMNO_NOMBRE + " TEXT, "
-                    + COL_ALUMNO_A_PATERNO + " TEXT, "
-                    + COL_ALUMNO_A_MATERNO + " TEXT, "
+                    + COL_ALUMNO_NOMBRE_COMPLETO + " TEXT, "  // Nueva columna para el nombre completo
                     + COL_ALUMNO_OCULTO + " INTEGER)";
             db.execSQL(crearTablaAlumno);
 
-            // Crear la tabla Materia
+
+        // Crear la tabla Materia
             String crearTablaMateria = "CREATE TABLE IF NOT EXISTS " + TABLE_MATERIA + " ("
                     + COL_MATERIA_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
                     + COL_MATERIA_CLAVE + " TEXT UNIQUE, "
@@ -121,13 +119,13 @@ public class BaseDatosHelper extends SQLiteOpenHelper {
 
         // Insertar datos en la tabla Alumno
         String insertarAlumno1 = "INSERT INTO " + TABLE_ALUMNO + " (" + COL_ALUMNO_ID + ", "
-                + COL_ALUMNO_NUM_CONTROL + ", " + COL_ALUMNO_NOMBRE + ", " + COL_ALUMNO_A_PATERNO + ", "
-                + COL_ALUMNO_A_MATERNO + ", " + COL_ALUMNO_OCULTO + ") VALUES (10, '20130810', 'Efrain', 'Montalvo', 'Sanchez', 0)";
+                + COL_ALUMNO_NUM_CONTROL + ", " + COL_ALUMNO_NOMBRE_COMPLETO + ", " + COL_ALUMNO_OCULTO + ") " +
+                "VALUES (10, '20130810', 'Efrain Montalvo Sanchez', 0)";
         db.execSQL(insertarAlumno1);
 
         String insertarAlumno2 = "INSERT INTO " + TABLE_ALUMNO + " (" + COL_ALUMNO_ID + ", "
-                + COL_ALUMNO_NUM_CONTROL + ", " + COL_ALUMNO_NOMBRE + ", " + COL_ALUMNO_A_PATERNO + ", "
-                + COL_ALUMNO_A_MATERNO + ", " + COL_ALUMNO_OCULTO + ") VALUES (11, '20130770', 'Tomas Alejandro', 'Galvan', 'Gandara', 0)";
+                + COL_ALUMNO_NUM_CONTROL + ", " + COL_ALUMNO_NOMBRE_COMPLETO + ", " + COL_ALUMNO_OCULTO + ") " +
+                "VALUES (11, '20130770', 'Tomás Alejandro Galván Gándara', 0)";
         db.execSQL(insertarAlumno2);
 
         // Insertar datos en la tabla Materia
@@ -185,19 +183,18 @@ public class BaseDatosHelper extends SQLiteOpenHelper {
 
     // Ejemplo de método para agregar datos a la tabla Alumno
     // Métodos para operaciones en la tabla Alumno
-    public boolean addAlumno(String numControl, String nombre, String aPaterno, String aMaterno, int oculto) {
+    public boolean addAlumno(String numControl, String nombreCompleto, int oculto) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put(COL_ALUMNO_NUM_CONTROL, numControl);
-        contentValues.put(COL_ALUMNO_NOMBRE, nombre);
-        contentValues.put(COL_ALUMNO_A_PATERNO, aPaterno);
-        contentValues.put(COL_ALUMNO_A_MATERNO, aMaterno);
+        contentValues.put(COL_ALUMNO_NOMBRE_COMPLETO, nombreCompleto);
         contentValues.put(COL_ALUMNO_OCULTO, oculto);
 
         long resultado = db.insert(TABLE_ALUMNO, null, contentValues);
 
         return resultado != -1;
     }
+
 
     public Cursor getAlumnos() {
         SQLiteDatabase db = this.getReadableDatabase();
