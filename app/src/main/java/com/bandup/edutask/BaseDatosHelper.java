@@ -387,4 +387,33 @@ public class BaseDatosHelper extends SQLiteOpenHelper {
         return idFinal;
     }
     //ERNESTO CHECKBOX
+
+    //ERNESTO NUEVO
+    public String getColAsignacionId(String nombreAsignacion){
+        SQLiteDatabase db = this.getReadableDatabase();
+        String query = " SELECT " + COL_ASIGNACION_ID + " FROM " + TABLE_ASIGNACION +
+                " WHERE " + COL_ASIGNACION_NOMBRE + " LIKE " + "'"+nombreAsignacion +"'"+
+                " AND "  + COL_ALUMNO_OCULTO + " = " + 0;
+        Cursor cursor = db.rawQuery(query, null);
+        String idFinal="";
+        if(cursor.moveToFirst()){
+            idFinal = cursor.getString(0);
+        }
+        return idFinal;
+    }
+
+    public boolean addAsignacion_Materia(String asignacionID, String materiaID){
+        //Aqui esta la insercion de codigo en caso de ser nuevo
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(COL_ASIGNACION_MATERIA_ASIGNACION_ID, asignacionID);
+        contentValues.put(COL_ASIGNACION_MATERIA_MATERIA_ID, materiaID);
+        //contentValues.put("Materia_ID", materiaID);
+        //Toast.makeText(MainActivity.getContext(), "Se ha ejecutadop el texto", Toast.LENGTH_SHORT);
+
+        long resultado = db.insert(TABLE_ASIGNACION_MATERIA, null, contentValues);
+        return resultado !=-1;
+    }
+
+    //ERNESTO NUEVO
 }

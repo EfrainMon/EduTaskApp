@@ -1,7 +1,5 @@
 package com.bandup.edutask;
 
-import static androidx.core.content.ContentProviderCompat.requireContext;
-
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -11,9 +9,6 @@ import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Menu;
-import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.CalendarView;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -25,8 +20,6 @@ import android.widget.Toast;
 
 import com.google.android.material.navigation.NavigationView;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.cardview.widget.CardView;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
@@ -48,6 +41,8 @@ public class MainActivity extends AppCompatActivity {
     private AppBarConfiguration mAppBarConfiguration;
     private ActivityMainBinding binding;
     private ListView listViewMateriaDeAlumno;// ListView para Agregar Alumno(lista de materias de alumno)
+
+    private ListView listViewMateriaDeAsignacion;// ListView para Agregar Alumno(lista de materias de alumno)
     private CalendarView calendarView;
     private CheckBox checkBox3; //Checkbox para Agregar Alumno(lista de materias de alumno)
 
@@ -230,9 +225,6 @@ public class MainActivity extends AppCompatActivity {
                                         String textoNumControl = numControl.getText().toString();
                                         String textoNombreAlu = nombreCompletoAlu.getText().toString();
 
-
-
-
                                         // Verifica si los campos no están vacíos
                                         if (!textoNumControl.isEmpty() && !textoNombreAlu.isEmpty() ) {
                                             // Agrega el alumno a la base de datos
@@ -292,6 +284,20 @@ public class MainActivity extends AppCompatActivity {
                     public void onClick(View view) {
                         // Infla la vista de tu activity_crear_asignacion.xml
                         View crearAsignacionView = getLayoutInflater().inflate(R.layout.activity_crear_asignacion, null);
+                        //ERNESTO NUEVO
+                        listViewMateriaDeAsignacion = crearAsignacionView.findViewById(R.id.listViewMateriasDeAsignacion);
+                        miBaseDatosHelper = new BaseDatosHelper(listViewMateriaDeAsignacion.getContext());
+                        checkBox3 = listViewMateriaDeAsignacion.findViewById(R.id.checkBox3);
+
+                        Cursor cursorMaterias = miBaseDatosHelper.getMaterias();
+
+                        String[] fromColumns = {BaseDatosHelper.getMateriaNombreColumn()};
+                        int[] toViews = {R.id.checkBox3};
+                        SimpleCursorAdapter adapter = new SimpleCursorAdapter(listViewMateriaDeAsignacion.getContext(), R.layout.custom_list_crear_asignaciones_materias_asignacion, cursorMaterias, fromColumns, toViews, 0);
+
+                        listViewMateriaDeAsignacion.setAdapter(adapter);
+                        //ERNESTO NUEVO
+
 
                         // Crea un AlertDialog
                         AlertDialog.Builder crearAsignacionBuilder = new AlertDialog.Builder(MainActivity.this);
@@ -313,9 +319,23 @@ public class MainActivity extends AppCompatActivity {
                                         if (!textoNombreAsignacion.isEmpty()) {
                                             // Agrega la asignación a la base de datos
                                             boolean exito = miBaseDatosHelper.addAsignacion(convertirFechaMilisegundosAFechaString(fechaSeleccionada), textoNombreAsignacion,  0, 0);
+                                            boolean success = false;
+                                            //Aqui se hace un recorrido en el array adapter que se utilizo en el listview para revisas cuales checkboxes son TRUE
+                                            for(int i = 0; i<adapter.getCount(); i++){
+                                                View view = listViewMateriaDeAlumno.getChildAt(i);
+                                                CheckBox checkBox = view.findViewById(R.id.checkBox3);
+                                                if(checkBox.isChecked()){
+                                                    String cadena = (String)checkBox.getText();
 
+                                                    //Aqui se agrega el alumno con materia
+                                                    success = miBaseDatosHelper.addAsignacion_Materia(
+                                                            miBaseDatosHelper.getColAsignacionId(textoNombreAsignacion),
+                                                            miBaseDatosHelper.getColMateriaId(cadena)
+                                                    );
+                                                }
+                                            }
                                             // Verifica si se agregó correctamente
-                                            if (exito) {
+                                            if (exito && success) {
                                                 // Puedes mostrar un mensaje de éxito o realizar otras acciones
                                                 Toast.makeText(MainActivity.this, "Asignación agregada correctamente", Toast.LENGTH_SHORT).show();
                                             } else {
