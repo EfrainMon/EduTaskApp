@@ -8,6 +8,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
 public class BaseDatosHelper extends SQLiteOpenHelper {
+    private Context context;
 
     public static final String TAG = "BaseDatosHelper";
     public static final String DB_NAME = "EduTaskDB";
@@ -58,6 +59,7 @@ public class BaseDatosHelper extends SQLiteOpenHelper {
 
     public BaseDatosHelper(Context context) {
         super(context, DB_NAME, null, DB_VERSION);
+        this.context = context;  // Agrega esta línea
     }
 
     @Override
@@ -116,7 +118,7 @@ public class BaseDatosHelper extends SQLiteOpenHelper {
                     + "FOREIGN KEY(" + COL_ASIGNACION_MATERIA_ASIGNACION_ID + ") REFERENCES " + TABLE_ASIGNACION + "(" + COL_ASIGNACION_ID + "))";
             db.execSQL(crearTablaAsignacionMateria);
 
- /*       // Insertar datos en la tabla Alumno
+        /*// Insertar datos en la tabla Alumno
         String insertarAlumno1 = "INSERT INTO " + TABLE_ALUMNO + " (" + COL_ALUMNO_ID + ", "
                 + COL_ALUMNO_NUM_CONTROL + ", " + COL_ALUMNO_NOMBRE_COMPLETO + ", " + COL_ALUMNO_OCULTO + ") " +
                 "VALUES (10, '20130810', 'Efrain Montalvo Sanchez', 0)";
@@ -124,7 +126,7 @@ public class BaseDatosHelper extends SQLiteOpenHelper {
 
         String insertarAlumno2 = "INSERT INTO " + TABLE_ALUMNO + " (" + COL_ALUMNO_ID + ", "
                 + COL_ALUMNO_NUM_CONTROL + ", " + COL_ALUMNO_NOMBRE_COMPLETO + ", " + COL_ALUMNO_OCULTO + ") " +
-                "VALUES (11, '20130770', 'Tomás Alejandro Galván Gándara', 0)";
+                "VALUES ( '20130770', 'Tomás Alejandro Galván Gándara', 0)";
         db.execSQL(insertarAlumno2);
 
         // Insertar datos en la tabla Materia
@@ -441,4 +443,15 @@ public class BaseDatosHelper extends SQLiteOpenHelper {
     }
 
     //ERNESTO NUEVO
+
+    public void borrarBaseDatos() {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        // Elimina la base de datos
+        context.deleteDatabase(DB_NAME);
+
+        // Crea la base de datos de nuevo
+        onCreate(db);
+    }
+
 }

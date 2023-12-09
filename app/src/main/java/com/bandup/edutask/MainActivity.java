@@ -457,6 +457,10 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
     //NUEVO
+    public void btnBorrarBaseDatos(MenuItem item) {
+        miBaseDatosHelper.borrarBaseDatos();
+        Toast.makeText(this, "Base de datos eliminada", Toast.LENGTH_SHORT).show();
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
