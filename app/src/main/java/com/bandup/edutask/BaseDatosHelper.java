@@ -151,6 +151,11 @@ public class BaseDatosHelper extends SQLiteOpenHelper {
                 + COL_ASIGNACION_OCULTO + ", Materia_ID) VALUES (10, '2013-12-06', 'Tarea 10', 0, 10)";
         db.execSQL(insertarAsignacion1);
 
+        String insertarAsignacion2 = "INSERT INTO " + TABLE_ASIGNACION + " (" + COL_ASIGNACION_ID + ", "
+                + COL_ASIGNACION_FECHA + ", " + COL_ASIGNACION_NOMBRE + ", "
+                + COL_ASIGNACION_OCULTO + ", Materia_ID) VALUES (11, '2013-12-06', 'Tarea 11', 0, 11)";
+        db.execSQL(insertarAsignacion2);
+
         // Insertar datos en la tabla Alumno_Materia
         String insertarAlumnoMateria = "INSERT INTO " + TABLE_ALUMNO_MATERIA + " (" + COL_ALUMNO_MATERIA_ID + ", "
                 + COL_ALUMNO_MATERIA_ALUMNO_ID + ", " + COL_ALUMNO_MATERIA_MATERIA_ID + ") VALUES (1, 10, 10)";
@@ -167,7 +172,9 @@ public class BaseDatosHelper extends SQLiteOpenHelper {
                 + COL_ASIGNACION_MATERIA_MATERIA_ID + ", " + COL_ASIGNACION_MATERIA_ASIGNACION_ID + ") VALUES (1, 10, 10)";
         db.execSQL(insertarAsignacionMateria);
 
-
+        String insertarAsignacionMateria2 = "INSERT INTO " + TABLE_ASIGNACION_MATERIA + " (" + COL_ASIGNACION_MATERIA_ID + ", "
+                + COL_ASIGNACION_MATERIA_MATERIA_ID + ", " + COL_ASIGNACION_MATERIA_ASIGNACION_ID + ") VALUES (2, 11, 11)";
+        db.execSQL(insertarAsignacionMateria2);
 
     }
 
@@ -302,9 +309,12 @@ public class BaseDatosHelper extends SQLiteOpenHelper {
 
     public Cursor getAsignacionesPorMateria(int materiaId) {
         SQLiteDatabase db = this.getReadableDatabase();
-        String query = "SELECT * FROM " + TABLE_ASIGNACION +
-                " WHERE " + COL_ASIGNACION_MATERIA_MATERIA_ID + " = ? AND " +
-                COL_ASIGNACION_OCULTO + " = 0";
+        String query = "SELECT " + TABLE_ASIGNACION + ".* FROM " + TABLE_ASIGNACION +
+                " INNER JOIN " + TABLE_ASIGNACION_MATERIA +
+                " ON " + TABLE_ASIGNACION + "." + COL_ASIGNACION_ID + " = " +
+                TABLE_ASIGNACION_MATERIA + "." + COL_ASIGNACION_MATERIA_ASIGNACION_ID +
+                " WHERE " + TABLE_ASIGNACION_MATERIA + "." + COL_ASIGNACION_MATERIA_MATERIA_ID + " = ?" +
+                " AND " + TABLE_ASIGNACION + "." + COL_ASIGNACION_OCULTO + " = 0";
         return db.rawQuery(query, new String[]{String.valueOf(materiaId)});
     }
 
