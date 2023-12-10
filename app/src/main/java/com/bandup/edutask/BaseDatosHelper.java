@@ -454,4 +454,36 @@ public class BaseDatosHelper extends SQLiteOpenHelper {
         onCreate(db);
     }
 
+    public boolean actualizarAsignacion(int idAsignacion, String nuevoNombre, String nuevaFecha) {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put(COL_ASIGNACION_NOMBRE, nuevoNombre);
+        values.put(COL_ASIGNACION_FECHA, nuevaFecha);
+
+        int filasAfectadas = db.update(TABLE_ASIGNACION, values, COL_ASIGNACION_ID + " = ?", new String[]{String.valueOf(idAsignacion)});
+        db.close();
+
+        return filasAfectadas > 0;
+    }
+
+    // Método para obtener el ID de la asignación por nombre y fecha
+    public int getIdAsignacionPorNombreYFecha(String nombreAsignacion, String fechaAsignacion) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        int idAsignacion = -1; // Valor predeterminado si no se encuentra la asignación
+
+        String[] columnas = {COL_ASIGNACION_ID}; // Ajusta el nombre de la columna de ID según tu base de datos
+        String seleccion = COL_ASIGNACION_NOMBRE + " = ? AND " + COL_ASIGNACION_FECHA + " = ?";
+        String[] argumentos = {nombreAsignacion, fechaAsignacion};
+
+        Cursor cursor = db.query(TABLE_ASIGNACION, columnas, seleccion, argumentos, null, null, null);
+
+        if (cursor != null && cursor.moveToFirst()) {
+            idAsignacion = cursor.getInt(cursor.getColumnIndexOrThrow(COL_ASIGNACION_ID));
+            cursor.close();
+        }
+
+        return idAsignacion;
+    }
+
 }

@@ -4,14 +4,17 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 
@@ -103,17 +106,43 @@ public class AsignacionesFragment extends Fragment {
                     imageViewEdit.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
+                            // Obtener datos de la asignación seleccionada
+                            String nombreAsignacion = items[position];
+                            String fechaAsignacion = subItems[position];
+
+                            // Inflar la vista del diálogo de edición
+                            View dialogView = getLayoutInflater().inflate(R.layout.activity_editar_asignacion, null);
+
+                            // Configurar los campos EditText con los datos recuperados
+                            EditText edtNombreAsignacionEditar = dialogView.findViewById(R.id.edtNombreAsignacionEditar);
+                            EditText txtFechaEntregaAsigEditar = dialogView.findViewById(R.id.txtFechaEntregaAsigEditar);
+
+                            edtNombreAsignacionEditar.setText(nombreAsignacion);
+                            txtFechaEntregaAsigEditar.setText(fechaAsignacion);
+
                             // Lógica cuando se hace clic en el icono de lápiz
-                            v = getLayoutInflater().inflate(R.layout.activity_editar_asignacion, null);
                             AlertDialog.Builder builder = new AlertDialog.Builder(v.getContext());
                             builder.setTitle("Editar")
-                                    .setView(v)
+                                    .setView(dialogView)
                                     .setPositiveButton("Editar", new DialogInterface.OnClickListener() {
                                         @Override
                                         public void onClick(DialogInterface dialogInterface, int i) {
+                                            // Obtener los nuevos datos de los campos de edición
+                                            String nuevoNombre = edtNombreAsignacionEditar.getText().toString();
+                                            String nuevaFecha = txtFechaEntregaAsigEditar.getText().toString();
+                                            int idAsignacion = baseDatosHelper.getIdAsignacionPorNombreYFecha(nombreAsignacion, fechaAsignacion);
+
+
                                             // Aquí debe ir el código para la edición
+                                            boolean exito = baseDatosHelper.actualizarAsignacion(idAsignacion, nuevoNombre, nuevaFecha);
+                                            if (exito) {
+                                                Toast.makeText(v.getContext(), "Asignación editada con éxito", Toast.LENGTH_SHORT).show();
+                                                // Realizar cualquier otra acción después de la edición
+                                            } else {
+                                                Toast.makeText(v.getContext(), "Error al editar la asignación", Toast.LENGTH_SHORT).show();
+                                            }
+
                                             dialogInterface.dismiss();
-                                            // Toast.makeText(v.getContext(), "Se ha Editado con Éxito", Toast.LENGTH_SHORT).show();
                                         }
                                     })
                                     .setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
@@ -122,9 +151,25 @@ public class AsignacionesFragment extends Fragment {
                                             dialogInterface.dismiss();
                                         }
                                     })
+                                    .setNeutralButton("Eliminar", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialogInterface, int i) {
+                                            // Obtener el ID de la asignación
+                                            int idAsignacion = baseDatosHelper.getIdAsignacionPorNombreYFecha(nombreAsignacion, fechaAsignacion);
+
+                                            // Realizar la lógica para eliminar la asignación
+                                            if (idAsignacion != -1) {
+                                                baseDatosHelper.deleteAsignacion(idAsignacion);
+                                                Toast.makeText(v.getContext(), "Asignación eliminada con éxito", Toast.LENGTH_SHORT).show();
+                                            }
+
+                                            dialogInterface.dismiss();
+                                        }
+                                    })
                                     .create()
                                     .show();
                         }
+
                     });
 
                     return view;
