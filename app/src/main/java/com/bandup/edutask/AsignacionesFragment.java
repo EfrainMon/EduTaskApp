@@ -21,6 +21,8 @@ import androidx.fragment.app.Fragment;
 import com.bandup.edutask.BaseDatosHelper;
 import com.bandup.edutask.R;
 
+import java.util.Comparator;
+
 public class AsignacionesFragment extends Fragment {
 
     private ListView listViewAssignments;
@@ -96,6 +98,14 @@ public class AsignacionesFragment extends Fragment {
                 @Override
                 public View getView(int position, View convertView, ViewGroup parent) {
                     View view = super.getView(position, convertView, parent);
+
+                    // Nuevoo, Ordena los elementos alfabéticamente
+                    this.sort(new Comparator<String>() {
+                        @Override
+                        public int compare(String s1, String s2) {
+                            return s1.compareToIgnoreCase(s2);
+                        }
+                    });
 
                     // Configura el texto del subitem
                     TextView text2 = view.findViewById(R.id.text2);

@@ -18,9 +18,7 @@ public class MateriasFragment extends Fragment {
     private ListView listViewMaterias;
     private BaseDatosHelper baseDatosHelper;
 
-    public MateriasFragment() {
-        // Constructor vacío requerido por Android
-    }
+    // Resto del código...
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -29,8 +27,8 @@ public class MateriasFragment extends Fragment {
         baseDatosHelper = new BaseDatosHelper(getActivity());
         listViewMaterias = view.findViewById(R.id.listViewMaterias);
 
-        // Obtén los datos de la base de datos
-        Cursor cursorMaterias = baseDatosHelper.getMaterias();
+        // Obtén los datos de la base de datos y ordénalos alfabéticamente
+        Cursor cursorMaterias = baseDatosHelper.getMateriasOrdenAlfab();
 
         // Configura el adaptador
         String[] fromColumns = {BaseDatosHelper.getMateriaNombreColumn()};
@@ -51,7 +49,6 @@ public class MateriasFragment extends Fragment {
                 openAsignacionesFragment(materiaId);
             }
         });
-
 
         return view;
     }

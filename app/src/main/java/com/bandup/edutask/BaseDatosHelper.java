@@ -256,7 +256,7 @@ public class BaseDatosHelper extends SQLiteOpenHelper {
 
     public Cursor getAsignaciones() {
         SQLiteDatabase db = this.getReadableDatabase();
-        String query = "SELECT * FROM " + TABLE_ASIGNACION + " WHERE " + COL_ASIGNACION_OCULTO + " = 0";
+        String query = "SELECT * FROM " + TABLE_ASIGNACION + " WHERE " + COL_ASIGNACION_OCULTO + " = 0 ORDER BY " + COL_ASIGNACION_NOMBRE + " ASC";
         return db.rawQuery(query, null);
     }
 
@@ -485,5 +485,15 @@ public class BaseDatosHelper extends SQLiteOpenHelper {
 
         return idAsignacion;
     }
+
+    public Cursor getMateriasOrdenAlfab() {
+        SQLiteDatabase db = this.getWritableDatabase();
+        String query = "SELECT " + COL_MATERIA_ID + " as _id, " + COL_MATERIA_CLAVE + ", " + COL_MATERIA_NOMBRE + ", " + COL_MATERIA_OCULTO +
+                " FROM " + TABLE_MATERIA + " ORDER BY " + COL_MATERIA_NOMBRE + " ASC";
+        return db.rawQuery(query, null);
+    }
+
+
+
 
 }
