@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Menu;
@@ -280,10 +281,27 @@ public class MainActivity extends AppCompatActivity {
                 // Aquí es donde insertar el código para el nuevo AlertDialog
                 TextView txtAnadeAsignacion = dialogView.findViewById(R.id.txtAnadeAsignacion);
                 txtAnadeAsignacion.setOnClickListener(new View.OnClickListener() {
+
+                    private String fechaSeleccionadaAsignacion;
                     @Override
                     public void onClick(View view) {
                         // Infla la vista de tu activity_crear_asignacion.xml
                         View crearAsignacionView = getLayoutInflater().inflate(R.layout.activity_crear_asignacion, null);
+                        CalendarView calendarViewAsignacion = crearAsignacionView.findViewById(R.id.calendarViewAsignacion);
+
+                        // Agrega un OnDateChangeListener para el calendarViewAsignacion
+                        calendarViewAsignacion.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
+                            @Override
+                            public void onSelectedDayChange(CalendarView view, int year, int month, int dayOfMonth) {
+                                fechaSeleccionadaAsignacion = String.format(Locale.getDefault(), "%04d-%02d-%02d", year, month + 1, dayOfMonth);
+
+                                // Puedes utilizar la fecha seleccionada en la lógica que necesites aquí
+                                Log.d("FechaSeleccionadaAsignacion", "Fecha Seleccionada (calendarViewAsignacion): " + fechaSeleccionadaAsignacion);
+
+                                // Aquí puedes realizar las acciones específicas que necesitas cuando cambia la fecha en calendarViewAsignacion
+                                // Por ejemplo, cargar asignaciones para la nueva fecha, actualizar la interfaz, etc.
+                            }
+                        });
                         //ERNESTO NUEVO
                         listViewMateriaDeAsignacion = crearAsignacionView.findViewById(R.id.listViewMateriasDeAsignacion);
                         miBaseDatosHelper = new BaseDatosHelper(listViewMateriaDeAsignacion.getContext());
@@ -318,7 +336,7 @@ public class MainActivity extends AppCompatActivity {
                                         // Verifica si los campos no están vacíos
                                         if (!textoNombreAsignacion.isEmpty()) {
                                             // Agrega la asignación a la base de datos
-                                            boolean exito = miBaseDatosHelper.addAsignacion(convertirFechaMilisegundosAFechaString(fechaSeleccionada), textoNombreAsignacion,  0);
+                                            boolean exito = miBaseDatosHelper.addAsignacion(fechaSeleccionadaAsignacion, textoNombreAsignacion,  0);
                                             boolean success = false;
                                             //Aqui se hace un recorrido en el array adapter que se utilizo en el listview para revisas cuales checkboxes son TRUE
                                             for(int i = 0; i<adapter.getCount(); i++){
