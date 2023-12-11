@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation"
+    app:startDestination="@+id/nav_home">
+
+    <fragment
+        android:id="@+id/nav_home"
+        android:name="com.bandup.edutask.ui.home.HomeFragment"
+        android:label="@string/menu_home"
+        tools:layout="@layout/fragment_home" />
+
+    <fragment
+        android:id="@+id/nav_gallery"
+        android:name="com.bandup.edutask.ui.gallery.GalleryFragment"
+        android:label="@string/menu_gallery"
+        tools:layout="@layout/fragment_gallery" />
+
+    <fragment
+        android:id="@+id/nav_asignaciones"
+        android:name="com.bandup.edutask.AsignacionesFragment"
+        android:label="@string/menu_asignaciones"
+        tools:layout="@layout/fragment_asignaciones" />
+
+    <fragment
+        android:id="@+id/nav_asignacion"
+        android:name="com.bandup.edutask.AsignacionFragment"
+        android:label="@string/menu_asignacion"
+        tools:layout="@layout/fragment_asignacion" />
+
+    <fragment
+        android:id="@+id/nav_slideshow"
+        android:name="com.bandup.edutask.ui.slideshow.SlideshowFragment"
+        android:label="@string/menu_slideshow"
+        tools:layout="@layout/fragment_slideshow" />
+
+    <fragment
+        android:id="@+id/nav_materias"
+        android:name="com.bandup.edutask.MateriasFragment"
+        android:label="@string/menu_materias"
+        tools:layout="@layout/fragment_slideshow" />
+</navigation>
