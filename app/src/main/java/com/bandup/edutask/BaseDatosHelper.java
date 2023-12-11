@@ -7,6 +7,8 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+import java.util.Set;
+
 public class BaseDatosHelper extends SQLiteOpenHelper {
     private Context context;
 
@@ -127,7 +129,7 @@ public class BaseDatosHelper extends SQLiteOpenHelper {
         String insertarAlumno2 = "INSERT INTO " + TABLE_ALUMNO + " (" + COL_ALUMNO_ID + ", "
                 + COL_ALUMNO_NUM_CONTROL + ", " + COL_ALUMNO_NOMBRE_COMPLETO + ", " + COL_ALUMNO_OCULTO + ") " +
                 "VALUES ( '20130770', 'Tomás Alejandro Galván Gándara', 0)";
-        db.execSQL(insertarAlumno2);
+        db.execSQL(insertarAlumno2);*/
 
         // Insertar datos en la tabla Materia
         String insertarMateria1 = "INSERT INTO " + TABLE_MATERIA + " (" + COL_MATERIA_ID + ", "
@@ -173,6 +175,11 @@ public class BaseDatosHelper extends SQLiteOpenHelper {
                 " VALUES (1, 10, 10, 0)";
         db.execSQL(insertarAlumnoAsignacion);
 
+        String insertarAlumnoAsignacion2 = "INSERT INTO " + TABLE_ALUMNO_ASIGNACION + " (" + COL_ALUMNO_ASIGNACION_ID + ", "
+                + COL_ALUMNO_ASIGNACION_ALUMNO_ID + ", " + COL_ALUMNO_ASIGNACION_ASIGNACION_ID + ", " + COL_ALUMNO_ASIGNACION_REALIZADA + ")" +
+                " VALUES (2, 11, 11, 1)";
+        db.execSQL(insertarAlumnoAsignacion2);
+
         // Insertar datos en la tabla Asignacion_Materia
         String insertarAsignacionMateria = "INSERT INTO " + TABLE_ASIGNACION_MATERIA + " (" + COL_ASIGNACION_MATERIA_ID + ", "
                 + COL_ASIGNACION_MATERIA_MATERIA_ID + ", " + COL_ASIGNACION_MATERIA_ASIGNACION_ID + ") VALUES (1, 10, 10)";
@@ -192,7 +199,7 @@ public class BaseDatosHelper extends SQLiteOpenHelper {
 
         String insertarAsignacionMateria5 = "INSERT INTO " + TABLE_ASIGNACION_MATERIA + " (" + COL_ASIGNACION_MATERIA_ID + ", "
                 + COL_ASIGNACION_MATERIA_MATERIA_ID + ", " + COL_ASIGNACION_MATERIA_ASIGNACION_ID + ") VALUES (5, 12, 12)";
-        db.execSQL(insertarAsignacionMateria5);*/
+        db.execSQL(insertarAsignacionMateria5);
 
     }
 
@@ -326,7 +333,11 @@ public class BaseDatosHelper extends SQLiteOpenHelper {
 
     public Cursor getAsignacionesPorMateria(int materiaId) {
         SQLiteDatabase db = this.getReadableDatabase();
-        String query = "SELECT " + TABLE_ASIGNACION + ".* FROM " + TABLE_ASIGNACION +
+        String query = "SELECT " +
+                TABLE_ASIGNACION + "." + COL_ASIGNACION_ID + " AS _id, " +
+                TABLE_ASIGNACION + "." + COL_ASIGNACION_NOMBRE + ", " +
+                TABLE_ASIGNACION + "." + COL_ASIGNACION_FECHA +
+                " FROM " + TABLE_ASIGNACION +
                 " INNER JOIN " + TABLE_ASIGNACION_MATERIA +
                 " ON " + TABLE_ASIGNACION + "." + COL_ASIGNACION_ID + " = " +
                 TABLE_ASIGNACION_MATERIA + "." + COL_ASIGNACION_MATERIA_ASIGNACION_ID +
@@ -334,6 +345,7 @@ public class BaseDatosHelper extends SQLiteOpenHelper {
                 " AND " + TABLE_ASIGNACION + "." + COL_ASIGNACION_OCULTO + " = 0";
         return db.rawQuery(query, new String[]{String.valueOf(materiaId)});
     }
+
 
     //ERNESTO CHECKBOX
     public boolean addAlumno_Materia(String alumnoID, String materiaID){
@@ -515,4 +527,20 @@ public class BaseDatosHelper extends SQLiteOpenHelper {
         return db.rawQuery(query, null);
     }
 
+    public Cursor getAsignados(int asignacionID, int realizada) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String query = "SELECT " +
+                TABLE_ALUMNO_ASIGNACION + ".*, " +
+                TABLE_ALUMNO + "." + COL_ALUMNO_NOMBRE_COMPLETO + " AS " + "_nom" +
+                " FROM " + TABLE_ALUMNO_ASIGNACION +
+                " LEFT JOIN " + TABLE_ALUMNO +
+                " ON " + TABLE_ALUMNO_ASIGNACION + "." + COL_ALUMNO_ASIGNACION_ALUMNO_ID + " = " +
+                TABLE_ALUMNO + "." + COL_ALUMNO_ID +
+                " WHERE " + TABLE_ALUMNO_ASIGNACION + "." + COL_ALUMNO_ASIGNACION_ASIGNACION_ID + " = ? " +
+                " AND " + TABLE_ALUMNO_ASIGNACION + "." + COL_ALUMNO_ASIGNACION_REALIZADA + " = ?";
+
+        String[] selectionArgs = {String.valueOf(asignacionID), String.valueOf(realizada)};
+
+        return db.rawQuery(query, selectionArgs);
+    }
 }
