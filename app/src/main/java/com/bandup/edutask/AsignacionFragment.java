@@ -26,6 +26,8 @@ import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class AsignacionFragment extends Fragment {
 
@@ -110,10 +112,12 @@ public class AsignacionFragment extends Fragment {
         if (cursor != null && cursor.moveToFirst()) {
             do {
                 String studentID = cursor.getString(cursor.getColumnIndexOrThrow("Alumno_ID"));
-                studentListNo.add(studentID);
+                String studentNameID = cursor.getString(cursor.getColumnIndexOrThrow("_nom"));
+                studentListNo.add(studentNameID + " - ID: " + studentID);
+                //studentListNo.add(studentID);
                 // Llama al método para actualizar asignacion_id
                 dbHelper.actualizarAsignacionId(materiaId, asigId, studentID);
-                Log.d("ESTUDIANTE", "Se actualizo el id del estudiante: " + studentID + "con la materia: " + materiaId + "y la asignación: " + asigId );
+                Log.d("ESTUDIANTE", "Se actualizo el id del estudiante: " + studentID + " con la materia: " + materiaId + " y la asignación: " + asigId );
 
             } while (cursor.moveToNext());
 
@@ -122,8 +126,10 @@ public class AsignacionFragment extends Fragment {
 
         if (cursor2 != null && cursor2.moveToFirst()) {
             do {
-                String studentName = cursor2.getString(cursor2.getColumnIndexOrThrow("Alumno_ID"));
-                studentListSi.add(studentName);
+                String studentID = cursor2.getString(cursor2.getColumnIndexOrThrow("Alumno_ID"));
+                String studentNameID = cursor2.getString(cursor2.getColumnIndexOrThrow("_nom"));
+                studentListSi.add(studentNameID + " - ID: " + studentID);
+                //studentListSi.add(studentID);
             } while (cursor2.moveToNext());
 
             cursor2.close();
@@ -151,7 +157,8 @@ public class AsignacionFragment extends Fragment {
                 checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                     @Override
                     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                        String selectedStudent = studentListNo.get(position); // Corregido de studentListNo a studentListSi
+                        String selectedStudent = extraerUltimosDigitos(studentListNo.get(position));
+                        Log.d("AQUI", "La posición que tomó fue la " + selectedStudent + " en el ListView 1");
 
                         // Actualiza el conjunto de estudiantes revisados
                         if (isChecked) {
@@ -194,7 +201,8 @@ public class AsignacionFragment extends Fragment {
                 checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                     @Override
                     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                        String selectedStudent = studentListSi.get(position);
+                        String selectedStudent = extraerUltimosDigitos(studentListSi.get(position));
+                        Log.d("AQUI", "La posicion que tomó fue la " + selectedStudent + " en el ListView 2");
 
                         // Actualiza el conjunto de estudiantes revisados
                         if (isChecked) {
@@ -282,6 +290,20 @@ public class AsignacionFragment extends Fragment {
         return rootView;
     }
 
+
+    private String extraerUltimosDigitos(String input) {
+        // Utiliza una expresión regular para encontrar los dígitos al final de la cadena
+        Pattern pattern = Pattern.compile("\\d+$"); // \\d+$ busca uno o más dígitos al final de la cadena
+        Matcher matcher = pattern.matcher(input);
+
+        // Encuentra el último conjunto de dígitos
+        if (matcher.find()) {
+            return matcher.group();
+        } else {
+            // No se encontraron dígitos
+            return "";
+        }
+    }
     private void actualizarListViews() {
         // ... (tu código existente para obtener datos actualizados de la base de datos)
 
